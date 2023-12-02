@@ -1,0 +1,22 @@
+# PyCharm
+.idea/
+
+# Python cache files
+*__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.md
+
+# Virtual environment
+/venv/
+# Jupyter Notebook
+*.ipynb_checkpoints/
+
+# Others
+.DS_Store
+*.swp
+*.swo
+*/metadata
+*/data*
