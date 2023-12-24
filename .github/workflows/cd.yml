@@ -1,0 +1,40 @@
+name: "CD Workflow"
+
+on:
+  workflow_run:
+    workflows: ["CI Workflow"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v2
+
+      - name: Install the gcloud cli
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GOOGLE_PROJECT }}
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          install_components: 'gke-gcloud-auth-plugin'
+          export_default_credentials: true
+
+      - name: Build and push the docker image
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+          GOOGLE_ARTIFACT_REGISTRY: ${{ secrets.GOOGLE_ARTIFACT_REGISTRY }}
+          GOOGLE_APPLICATION_REGION: ${{ secrets.GOOGLE_APPLICATION_REGION }}
+          IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          gcloud auth configure-docker $GOOGLE_APPLICATION_REGION-docker.pkg.dev
+          docker build -t $GOOGLE_APPLICATION_REGION-docker.pkg.dev/$GOOGLE_PROJECT/$GOOGLE_ARTIFACT_REGISTRY/$IMAGE_NAME:$IMAGE_TAG .
+          docker push $GOOGLE_APPLICATION_REGION-docker.pkg.dev/$GOOGLE_PROJECT/$GOOGLE_ARTIFACT_REGISTRY/$IMAGE_NAME:$IMAGE_TAG

@@ -36,3 +36,13 @@ override.tf.json
 terraform.rc
 
 *secret_keys.txt
+
+# Python cache files
+*__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.json
+*scripts
+commands.txt

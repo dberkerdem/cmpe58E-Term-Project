@@ -1,15 +1,8 @@
-from utils import ArithmeticOperations, StringManipulations
+from fastapi import FastAPI
 
-# Arithmetic operations
-a = 10
-b = 5
+app = FastAPI()
 
-print(f"Addition: {ArithmeticOperations.add(a, b)}")
-print(f"Subtraction: {ArithmeticOperations.subtract(a, b)}")
-print(f"Multiplication: {ArithmeticOperations.multiply(a, b)}")
 
-# String manipulations
-s = "hello world"
-
-print(f"Capitalized: {StringManipulations.capitalize_string(s)}")
-print(f"Reversed: {StringManipulations.reverse_string(s)}")
+@app.get("/")
+def read_root():
+    return {"message": "Hello World/v1"}
