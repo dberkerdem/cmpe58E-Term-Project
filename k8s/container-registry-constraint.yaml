@@ -7,3 +7,8 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    namespaces:
+      - "default"
+  parameters:
+    repos:
+      - "us-east1-docker.pkg.dev/cmpe58e-term-project/cmpe58e-docker-registry/"

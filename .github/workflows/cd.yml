@@ -38,18 +38,14 @@ jobs:
           docker build -t $GOOGLE_APPLICATION_REGION-docker.pkg.dev/$GOOGLE_PROJECT/$GOOGLE_ARTIFACT_REGISTRY/$IMAGE_NAME:$GITHUB_SHA .
           docker push $GOOGLE_APPLICATION_REGION-docker.pkg.dev/$GOOGLE_PROJECT/$GOOGLE_ARTIFACT_REGISTRY/$IMAGE_NAME:$GITHUB_SHA
 
-      - name: Set up Kustomize
-        run: |-
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x ./kustomize
-
       - name: Deploy to gke
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+          GOOGLE_ARTIFACT_REGISTRY: ${{ secrets.GOOGLE_ARTIFACT_REGISTRY }}
           GOOGLE_APPLICATION_REGION: ${{ secrets.GOOGLE_APPLICATION_REGION }}
+          IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
           GKE_CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GOOGLE_APPLICATION_REGION
           cd k8s
-          kubectl apply -f resources.yaml
-          
+          envsubst < resources.yaml | kubectl apply -f -
