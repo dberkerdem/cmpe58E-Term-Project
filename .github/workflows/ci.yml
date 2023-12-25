@@ -85,6 +85,19 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"
 
+  secret-scan:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install TruffleHog
+        run: pip install trufflehog
+
+      - name: Scan current branch for secrets
+        run: trufflehog --regex --entropy=False .
+
   container-scan:
     name: Container Vulnerability Scan
     runs-on: ubuntu-20.04
