@@ -1,10 +1,10 @@
-from fastapi import FastAPI
-import socket
+def connect_to_database():
+    # Hard-coded credentials are a security risk
+    username = "admin"
+    password = "password123"
 
-hostname = socket.gethostname()
-app = FastAPI()
+    # Simulated database connection
+    print(f"Connecting to database with username: {username} and password: {password}")
 
-
-@app.get("/")
-def read_root():
-    return {"message": f"Hello World from {hostname}. (v2)"}
+# Example function call
+connect_to_database()
