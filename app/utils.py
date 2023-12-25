@@ -9,7 +9,7 @@ class ArithmeticOperations:
 
     @staticmethod
     def multiply(x, y):
-        return x * y
+        return x * y / 2
 
 
 class StringManipulations:
